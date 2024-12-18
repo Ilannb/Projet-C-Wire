@@ -1,24 +1,16 @@
-include <stdio.h>
-#include <stdlib.h>
-#include "avl.h"
-#include "Station.h"
+#ifndef STATION_H
+#define STATION_H
 
-
-
-void lectureFichier(File*fichier){
-
-    
-}
-
-
-int somme(AVL* s){
-
-
-
-
+typedef struct station{
+  int type;
+  int capacite;
+  int conso;
   
+}Station;
+
+#endif
   
 
 
 
-}
+
