@@ -104,6 +104,8 @@ echo "type de station;capacité;consommation" > "$fichier_filtre"
 
 #lecture du fichier d'entrée c-wire de base
 
+start_time=$(date +%s)
+
 awk -F';' -v station="$2" -v conso="$3" -v fichier_filtre="${2}_${3}_${4}cwire.csv" '
 BEGIN {
   OFS=";" #pour bien séparer avec les point-virgules
@@ -134,7 +136,7 @@ NR > 1 { #le > 1 pour ignorer la première ligne du fichier
     exit 1;
   }
 
-  #enregistrement de la ligne si les valeurs sont valides
+  #enregistrement de la ligne si ce qu on entre est valide
   
   if(station == "hvb"){ #pour bien filtrer pour le cas du hvb
     if (stat != "-" && $3 == "-") {  
@@ -174,3 +176,13 @@ END {
   print ""
 } ' "$1"
 
+end_time=$(date +%s) #l'heure de fin en secondes
+execution_time=$((end_time - start_time)) #différence entre l'heure de fin et de début pour avoir le temps d'execution total
+
+if [[ $execution_time == 0 ]]; then
+  echo "Temps d'exécution : $execution_time seconde."
+  echo ""
+else
+  echo "Temps d'exécution : $execution_time secondes."
+  echo ""
+fi
