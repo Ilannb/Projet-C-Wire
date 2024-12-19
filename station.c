@@ -1,30 +1,54 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "avl.h"
-#include "Station.h"
+#include "avl.h" // Inclure votre bibliothèque AVL existante
 
-void verif_erreur(File * file){
-    if(file == NULL){
-        printf("Il y a une erreur lors de l'ouverture du fichier\n");
-        exit(1);
+
+long convertionStrEntier(const char* str){
+    if(strcmp(str, "-") == 0){
+        return 0;
     }
-}
-int* recupValFichier(const char *nomFichier){
-    File *fichier;
-    Station * val;
-
-    fichier = fopen(nomFichier, "r");
-    verif_erreur(ficher);
-
-    printf("\n les entier dans le fichier")
-
+    return atoll(str);
 }
 
 
 
 
-int somme(AVL* s){
 
-  
-  
+AVL* traiterFichier(const char* NomFichier, AVL* noeud) {
+    FILE *file = fopen(NomFichier, "r");
+    if(file == NULL){
+        perror("Erreur lors de l'ouverture du fichier\n");
+        return noeud;
+    }
+
+    char line[256];
+
+    int h = 0; //variable pour suivre la hauteur de l'arbre 
+
+    fgets(line, sizeof(line), file);
+
+    while(fgets(line, sizeof(line), file)){
+        int type;
+        char capaciteStr[20];
+        char consoStr[20];
+        long capacite;
+        long conso;
+
+        sscanf(line, "%d;%19[^;];%19s", &type, capaciteStr, consoStr);
+
+        capacite = convertionStrEntier(capaciteStr);
+        conso = convertionStrEntier(consoStr);
+
+        Station s;
+        s.ID = type;
+        s.capacite = capacite;
+        s.somme_conso = conso;
+
+        noeud = insertionAVL(noeud, s, &h);
+    }
+
+    fclose(file);
+    return noeud;
+
+
 }
