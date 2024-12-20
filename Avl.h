@@ -23,5 +23,6 @@ AVL* doubleRotaG(AVL* a);
 AVL* doubleRotaD(AVL* a);
 AVL* equilibrage(AVL* a);
 AVL* insertionAVL(AVL* a,int* h,int ID,long long capacite, long long conso);
+long convertionStrEntier(const char* str);
 
 #endif 
