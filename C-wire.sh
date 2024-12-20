@@ -57,9 +57,10 @@ afficher_aide() {
   echo ""
   echo "ATTENTION ! Les paramètres suivants sont interdits/non-fonctionnels:"
   echo "  bash c-wire.sh fichier.csv hvb all"
-  echo "  bash c-wire.sh fichier.csv hvb indiviv"
+  echo "  bash c-wire.sh fichier.csv hvb indiv"
   echo "  bash c-wire.sh fichier.csv hva all"
-  echo "  bash c-wire.sh fichier.csv hva indiviv"
+  echo "  bash c-wire.sh fichier.csv hva indiv"
+  echo ""
 }
 
 #vérification de l'option d'aide
@@ -90,8 +91,17 @@ fi
 
 #vérification des options interdites car seules les entreprises sont connectées aux stations HV-B et HV-A
 
-if [[ "$3" != "comp" && ("$2" == "hvb" || "$3" == "hva" ) ]]; then
+if [[ "$3" != "comp" && ("$2" == "hvb" || "$2" == "hva" ) ]]; then
   echo "Seules les entreprises sont connectées aux stations HV-B et HV-A, veuillez réessayer."
+  echo ""
+  afficher_aide
+  exit 1
+fi
+
+#verification des options dans le cas où on entre lv hvb/hva qui donne un fichier vide, donc on interdit les combinaisons suivantes
+
+if [[ "$2" == "lv" && ("$3" == "hvb" || "$3" == "hva")]]; then
+  echo "Combinaison impossible, veuillez réessayer."
   echo ""
   afficher_aide
   exit 1
@@ -115,7 +125,6 @@ BEGIN {
 NR > 1 { #le > 1 pour ignorer la première ligne du fichier
 
   #filtrage du type de station
-  
   if (station == "hvb") stat = $2; #cela correspondra à HV-B Station dans le fichier
   else if (station == "hva") stat = $3; #cela correspondra à HV-A Station dans le fichier
   else if (station == "lv") stat = $4; #cela correspondra à LV Station dans le fichier
@@ -126,7 +135,6 @@ NR > 1 { #le > 1 pour ignorer la première ligne du fichier
   }
 
   #filtrage du type de consommateur
-  
   if (conso == "comp") cons = $5; #cela correspondra à Company dans le fichier
   else if (conso == "indiv") cons = $6; #cela correspondra à Individual dans le fichier
   else if (conso == "all") cons = ($5 + $6); #cela correspondra à Company ET Indvidual dans le fichier
@@ -136,35 +144,16 @@ NR > 1 { #le > 1 pour ignorer la première ligne du fichier
     exit 1;
   }
 
-  #enregistrement de la ligne si ce qu on entre est valide
-  
-  if(station == "hvb"){ #pour bien filtrer pour le cas du hvb
-    if (stat != "-" && $3 == "-") {  
+  # enregistrement de la ligne si ce qu on entre est valide
+  if (stat != "-") {
+    if (station == "hvb" && $3 == "-") {
       print stat, $7, $8 >> fichier_filtre;
-    }
-  }
-  
-  else if(station == "hva"){ #pour bien filtrer pour le cas du hva
-    if (stat != "-" && $4 == "-") { #pour bien filtrer 
+    } 
+    else if (station == "hva" && $4 == "-") { #pour bien filtrer 
       print stat, $7, $8 >> fichier_filtre;
-    }
-  }
-  
-  else { #pour bien filtrer pour le cas du lv
-    if (conso == "indiv"){
-      if (stat != "-" && $5 == "-"){
-        print stat, $7, $8 >> fichier_filtre;
-      }
-    }
-    
-    else if (conso == "comp"){
-      if (stat != "-" && $6 == "-"){
-        print stat, $7, $8 >> fichier_filtre;
-      }
-    }
-    
-    else {
-      if (stat != "-"){
+    } 
+    else if (station == "lv") {
+      if ((conso == "indiv" && $5 == "-") || (conso == "comp" && $6 == "-") || conso == "all") {
         print stat, $7, $8 >> fichier_filtre;
       }
     }
@@ -174,7 +163,7 @@ NR > 1 { #le > 1 pour ignorer la première ligne du fichier
 END {
   print "Succès du traitement. Les résultats se trouvent dans : " fichier_filtre;
   print ""
-} ' "$1"
+}' "$1"
 
 end_time=$(date +%s) #l'heure de fin en secondes
 execution_time=$((end_time - start_time)) #différence entre l'heure de fin et de début pour avoir le temps d'execution total
