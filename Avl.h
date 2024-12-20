@@ -6,8 +6,11 @@ typedef struct AVL {
     struct AVL* fg;
     struct AVL* fd;
     int eq;
-    Station val;
+    int ID;
+    long long capacité;
+    long long conso
 }AVL;
+ 
 
 AVL* creerAVL(Station s);
 int estVide(AVL* a);
