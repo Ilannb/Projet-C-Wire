@@ -28,7 +28,7 @@ AVL* traiterFichier(const char* NomFichier, AVL* noeud) {
     fgets(line, sizeof(line), file);
 
     while(fgets(line, sizeof(line), file)){
-        int type;
+        int ID;
         char capaciteStr[20];
         char consoStr[20];
         long capacite;
@@ -40,7 +40,7 @@ AVL* traiterFichier(const char* NomFichier, AVL* noeud) {
         conso = convertionStrEntier(consoStr);
 
         Station s;
-        s.ID = type;
+        s.ID = ID;
         s.capacite = capacite;
         s.somme_conso = conso;
 
