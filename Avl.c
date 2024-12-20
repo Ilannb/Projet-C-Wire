@@ -95,7 +95,7 @@ AVL* equilibrage(AVL* a){
     return a;
 }
 
-AVL* insertionAVL(AVL* a,  int* h,long long capacite,long long conso){
+AVL* insertionAVL(AVL* a, int ID, int* h,long long capacite,long long conso){
     if(estVide(a)){
         *h = 1;
         return creerAVL(a->ID,capacite,conso);
@@ -164,7 +164,7 @@ AVL* traiterFichier(const char* NomFichier, AVL* noeud) {
         conso = convertionStrEntier(consoStr);
 
 
-         AVL noeud =  insertionAVL(noeud,ph,capacite,conso);
+         AVL noeud =  insertionAVL(noeud,ID,ph,capacite,conso);
           
  
         
@@ -176,4 +176,7 @@ AVL* traiterFichier(const char* NomFichier, AVL* noeud) {
 
 
 }
+
+
+
 
