@@ -2,7 +2,7 @@
 #define STATION_H
 
 typedef struct station{
-  int type;
+  int ID;
   int capacite;
   int conso;
   
