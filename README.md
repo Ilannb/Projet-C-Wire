@@ -1,4 +1,5 @@
 # Projet-C-Wire
+C-Wire est un projet développé par Anas CHOKRI, Nassim Izza et Ilann BOUDRIA. (2024/2025) 
 
  1 - Assurez vous d'utiliser Linux ou d'avoir installer un termial Linux
 
