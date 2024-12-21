@@ -6,11 +6,11 @@
 
    Utilisez les commandes suivantes :
    ```sh
-   ./c-wire.sh <Fichier CSV> <Type de station > <Type de consommateur> [ID de la centrale mère]```
+   ./c-wire.sh <Fichier CSV> <Type de station > <Type de consommateur> [ID de la centrale mère]
    ```
    Si vous n'avez pas les droits nécessaire utilisez :
    ```sh
-   bash c-wire.sh <Fichier CSV> <Type de station> <Type de consommateur> [ID de la centrale mère]```
+   bash c-wire.sh <Fichier CSV> <Type de station> <Type de consommateur> [ID de la centrale mère]
    ```
    Exemple : 
    ```sh
@@ -27,7 +27,7 @@
       
   Pour afficher l'option d'aide, utilisez l'option -h
   ```sh
-  ./c-wire.sh -h```
+  ./c-wire.sh -h
   ```
 
   5 - Besoins du projet
