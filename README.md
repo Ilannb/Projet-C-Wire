@@ -47,7 +47,7 @@ C-Wire est un projet développé par Anas CHOKRI, Nassim Izza et Ilann BOUDRIA. 
 
   - Programmation C
   - Programmation Shell
-  - Platforme Vs code
+  - Plateforme Vs code
   - Plateforme GitHub
 
   7 - Collaborateurs
