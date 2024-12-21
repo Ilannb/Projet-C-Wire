@@ -6,7 +6,7 @@
 
    Utilisez les commandes suivantes :
    
-   ``` ./c-wire.sh <Fichier CSV> < Type de station > <Type de consommateur> [ID de la centrale mère]```
+   ** ./c-wire.sh <Fichier CSV> < Type de station > <Type de consommateur> [ID de la centrale mère] **
 
    Si vous n'avez pas les droits nécessaire utilisez :
 
