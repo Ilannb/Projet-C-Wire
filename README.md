@@ -6,15 +6,15 @@
 
    Utilisez les commandes suivantes :
    
-   ``` ./c-wire.sh <Fichier CSV> < Type de station > <Type de consommateur> [ID de la centrale mère]
+   ``` ./c-wire.sh <Fichier CSV> < Type de station > <Type de consommateur> [ID de la centrale mère]```
 
    Si vous n'avez pas les droits nécessaire utilisez :
 
-   ```bash c-wire.sh <Fichier CSV> < Type de station > <Type de consommateur> [ID de la centrale mère]
+   ```bash c-wire.sh <Fichier CSV> <Type de station> <Type de consommateur> [ID de la centrale mère]```
 
    Exemple : 
 
-   - ./c-wire.sh data.csv hva comp 4
+    ``` ./c-wire.sh data.csv hva comp 4```
 
    3 - Options
    
@@ -28,14 +28,14 @@
       
   Pour afficher l'option d'aide, utilisez l'option -h
   
-  ./c-wire.sh -h
+  ```./c-wire.sh -h```
 
   5 - Besoins du projet
 
   Avant de mettre en route le projet assurez vous d'avoir installé :
   
     - GCC pour compiler le code
-    - Make pour assembler le projet
+    -  Make pour assembler le projet
     
   Afin d'installer les besoins du projet sur un systeme Ubuntu/Debian, entrez:
   
