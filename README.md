@@ -35,8 +35,8 @@ C-Wire est un projet développé par Anas CHOKRI, Nassim Izza et Ilann BOUDRIA. 
 
   Avant de mettre en route le projet assurez vous d'avoir installé :
   
-    - **GCC** pour compiler le code
-    - **Make** pour assembler le projet
+  - **GCC** pour compiler le code
+  - **Make** pour assembler le projet
     
   Afin d'installer les besoins du projet sur un systeme Ubuntu/Debian, entrez:
   ```bash
