@@ -177,3 +177,26 @@ AVL* traiterFichier(const char* NomFichier, AVL* noeud) {
 
 }
 
+void ecrireArbreDansFichier(AVL* a, FILE *fichier){
+    if(noeud == NULL){
+        return;
+    }
+
+    ecrireArbreDansFichier(noeud->fg, fichier);
+
+    fprintf(fichier, "%d:%lld:%lld\n", noeud->ID, noeud->capacite, noeud->conso);
+
+    ecrireArbreDansFichier(noeud->fd, fichier);
+}
+
+void libererArbre(AVL *noeud){
+    if(noeud == NULL){
+        return;
+    }
+
+    libererArbre(noeud->fg);
+    libererArbre(noeud->fd);
+
+    free(noeud);
+}
+
