@@ -32,7 +32,11 @@ CONS="$3"
 
 #ID centrale (optionnel):
 
-IDC="$4"
+IDC=-1
+
+if [[ $# -eq 4 ]]; then
+  IDC="$4"
+fi 
 
 #fonction de l'option d'aide(-h)(optionnel):
 
@@ -107,19 +111,47 @@ if [[ "$2" == "lv" && ("$3" == "hvb" || "$3" == "hva")]]; then
   exit 1
 fi
 
+#verification de la centrale
+
+if [[ $# -eq 4 && ( $4 -lt 1 || $4 -gt 5 ) ]]; then
+  echo "La centrale entrée est invalide, veuillez réessayer."
+  echo ""
+  afficher_aide
+  exit 1
+fi
+
+#pour ajouter des dossiers
+
+if [ -d tmp ]; then
+  rm -rf tmp 
+fi
+
+mkdir tmp 
+if [ ! -d input ]; then
+  mkdir input 
+fi
+
+if [ ! -d tests ]; then
+  mkdir tests 
+fi
+
+if [ ! -d graph ]; then
+  mkdir graph 
+fi
+
 #fichier de sortie à la fin 
 
-fichier_filtre="${2}_${3}_${4}cwire.csv"
-echo "type de station;capacité;consommation" > "$fichier_filtre" 
+fichier_filtre="tmp/${2}_${3}_${4}cwire.csv"
 
 #lecture du fichier d'entrée c-wire de base
 
 start_time=$(date +%s)
 
-awk -F';' -v station="$2" -v conso="$3" -v fichier_filtre="${2}_${3}_${4}cwire.csv" '
+touch "$fichier_filtre"
+
+awk -F';' -v station="$2" -v conso="$3" -v centrale="$IDC" -v fichier_filtre="tmp/${2}_${3}_${4}cwire.csv" '
 BEGIN {
   OFS=";" #pour bien séparer avec les point-virgules
-  print "type de station;capacité;consommation" > fichier_filtre; #en-tête du fichier de sortie
 }
 
 NR > 1 { #le > 1 pour ignorer la première ligne du fichier
@@ -146,13 +178,13 @@ NR > 1 { #le > 1 pour ignorer la première ligne du fichier
 
   # enregistrement de la ligne si ce qu on entre est valide
   if (stat != "-") {
-    if (station == "hvb" && $3 == "-") {
+    if ((centrale == "-1" && station == "hvb" && $3 == "-") || (centrale != "-1" && centrale == $1 && station == "hvb" && $3 == "-")) {
       print stat, $7, $8 >> fichier_filtre;
     } 
-    else if (station == "hva" && $4 == "-") { #pour bien filtrer 
+    else if ((centrale == "-1" && station == "hva" && $4 == "-") || (centrale != "-1" && centrale == $1 && station == "hva" && $4 == "-")) { #pour bien filtrer 
       print stat, $7, $8 >> fichier_filtre;
     } 
-    else if (station == "lv") {
+    else if ((centrale == "-1" && station == "lv") || (centrale != "-1" && centrale == $1 && station == "lv")) {
       if ((conso == "indiv" && $5 == "-") || (conso == "comp" && $6 == "-") || conso == "all") {
         print stat, $7, $8 >> fichier_filtre;
       }
@@ -165,8 +197,41 @@ END {
   print ""
 }' "$1"
 
+cd CodeC
+make
+if [ $# -eq 3 ]; then
+  fichier_resultat="tests/${2}_${3}.csv"
+else
+  fichier_resultat="tests/${2}_${3}_${4}.csv"
+fi
+./avl_tree "../$fichier_filtre" "../$fichier_resultat" "$3"
+cd ..
+echo ""
+echo "station $2:capacité:consommation $3" > "tmp/fichier_tmp3.csv" 
+sort "$fichier_resultat" -t':' -n -k2 >> "tmp/fichier_tmp3.csv"
+mv "tmp/fichier_tmp3.csv" "$fichier_resultat"
+
+#pour le lv all minmax
+
+if [ "$3" = "all" ]; then
+
+  tail -n+2 "$fichier_resultat" | sort -t':' -n -k3 > "tmp/fichier_tmp.csv"
+  head -n10 "tmp/fichier_tmp.csv" > "tmp/fichier_tmp2.csv"
+  tail -n10 "tmp/fichier_tmp.csv" >> "tmp/fichier_tmp2.csv"
+
+  if [ $# -eq 3 ]; then
+    file="tests/${2}_${3}_minmax.csv"
+  else
+    file="tests/${2}_${3}_${4}_minmax.csv"
+  fi
+  echo "station $2:capacité:consommation $3:rendement énergétique" > "$file"
+  sort -t':' -n -k4 "tmp/fichier_tmp2.csv" >> "$file"
+fi
+
 end_time=$(date +%s) #l'heure de fin en secondes
 execution_time=$((end_time - start_time)) #différence entre l'heure de fin et de début pour avoir le temps d'execution total
+
+#pour ne pas faire de faute de français
 
 if [[ $execution_time == 0 ]]; then
   echo "Temps d'exécution : $execution_time seconde."

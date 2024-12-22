@@ -1,14 +1,14 @@
 CC = gcc
 CFLAGS = -Wall -std=c11
-LDFLAGS = 
-SRC = main.c avl.c
+SRC = main.c Avl.c
 OBJ = $(SRC:.c=.o)
 EXEC = avl_tree
 
 all: $(EXEC)
 
 $(EXEC): $(OBJ)
-	$(CC) $(OBJ) -o $(EXEC) $(LDFLAGS)
+	$(CC) $(OBJ) -o $(EXEC)
+	rm -f $(OBJ)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
