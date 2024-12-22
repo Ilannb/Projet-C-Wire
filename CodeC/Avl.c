@@ -184,7 +184,7 @@ AVL* traiterFichier(const char* NomFichier, AVL* noeud) {
     return noeud;
 }
 
-//réecriture du fichier avec sommation de la consommation
+//réecriture du fichier avec sommation de la consommation et avec rendement en 4e colonne (capacité - consommation)
 
 void ecrireArbreDansFichier(AVL*noeud, FILE *fichier, char* typeconso){
     if(estVide(noeud)){
