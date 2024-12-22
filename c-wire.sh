@@ -135,8 +135,8 @@ if [ ! -d tests ]; then
   mkdir tests 
 fi
 
-if [ ! -d graph ]; then
-  mkdir graph 
+if [ ! -d graphique ]; then
+  mkdir graphique
 fi
 
 #fichier de sortie à la fin 
@@ -193,8 +193,12 @@ NR > 1 { #le > 1 pour ignorer la première ligne du fichier
 }
 
 END {
-  print "Succès du traitement. Les résultats se trouvent dans : " fichier_filtre;
-  print ""
+  if(centrale == "-1"){
+    print "Traitement terminé. Les résultats se trouvent dans : tests/"station"_"conso".csv"
+  }
+  else{
+    print "Traitement terminé. Les résultats se trouvent dans : tests/"station"_"conso"_"centrale".csv"
+  }
 }' "$1"
 
 cd CodeC
@@ -228,12 +232,39 @@ if [ "$3" = "all" ]; then
   sort -t':' -n -k4 "tmp/fichier_tmp2.csv" >> "$file"
 fi
 
+#pour creer un graphique lv_all_minmax
+if [[ "$3" == all ]]; then
+awk -F: 'NR > 1 {print NR-1, $4}' "$file" > data.dat 
+gnuplot <<EOF
+set terminal pngcairo size 800,600 
+set output 'graphique/graphique.png'
+
+set title "Graphique : min et max"
+set xlabel "ID"
+set ylabel "Consommation en kWh"
+
+set style data histogram
+set style fill solid border -1
+set boxwidth 0.8
+
+set grid ytics
+
+set style line 1 lc rgb 'green' # Style pour les positifs
+set style line 2 lc rgb 'red'   # Style pour les négatifs
+
+plot 'data.dat' using (column(2) > 0 ? \$2 : 1/0):xtic(1) title 'Positifs' with histogram ls 1, \
+  '' using (column(2) < 0 ? \$2 : 1/0):xtic(1) title 'Négatifs' with histogram ls 2
+EOF
+echo "Un graphique a aussi été crée, il se trouve à : graphique/graphique.png"
+echo ""
+fi
+
 end_time=$(date +%s) #l'heure de fin en secondes
 execution_time=$((end_time - start_time)) #différence entre l'heure de fin et de début pour avoir le temps d'execution total
 
 #pour ne pas faire de faute de français
 
-if [[ $execution_time == 0 ]]; then
+if [[ $execution_time == 0 || $execution_time == 1 ]]; then
   echo "Temps d'exécution : $execution_time seconde."
   echo ""
 else

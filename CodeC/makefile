@@ -4,6 +4,7 @@ SRC = main.c Avl.c
 OBJ = $(SRC:.c=.o)
 EXEC = avl_tree
 
+.SILENT: 
 all: $(EXEC)
 
 $(EXEC): $(OBJ)
