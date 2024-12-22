@@ -42,6 +42,7 @@ C-Wire est un projet développé par Anas CHOKRI, Nassim Izza et Ilann BOUDRIA. 
   ```bash
   sudo apt update
   sudo apt install build-essential
+  sudo apt install gnuplot
   ```
   6 - Projet créé grâce aux moyen suivant : 
 
